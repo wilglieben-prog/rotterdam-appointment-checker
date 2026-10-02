@@ -190,18 +190,25 @@ def main():
                     continue
             
             if number_dropdown:
-                # Select the option for 2 people
+                number_dropdown_id = number_dropdown.get_attribute('id')
                 select = Select(number_dropdown)
                 # Try to select by visible text first (more reliable)
                 options = select.options
                 print(f"Available options: {[opt.text for opt in options]}")
                 
-                # Look for option with "2" in it
-                for i, option in enumerate(options):
-                    if "2" in option.text and "persoon" in option.text.lower() or option.get_attribute('value') == "1":
-                        select.select_by_index(i)
-                        print(f"Selected option: {option.text}")
-                        break
+                # Select 1 person (by visible text "1")
+                print("People setting in this version: 1 person")
+                select.select_by_visible_text("1")
+                time.sleep(2)  # page may refresh the form after changing the dropdown
+                # Re-read the dropdown from the page to confirm what is really selected
+                confirmed = Select(driver.find_element(By.ID, number_dropdown_id)).first_selected_option.text
+                print(f"Selected option: {confirmed}")
+                if confirmed.strip() != "1":
+                    print("Dropdown did not stick at 1, selecting again...")
+                    Select(driver.find_element(By.ID, number_dropdown_id)).select_by_visible_text("1")
+                    time.sleep(2)
+                    confirmed = Select(driver.find_element(By.ID, number_dropdown_id)).first_selected_option.text
+                    print(f"Selected option after retry: {confirmed}")
                 
                 time.sleep(1)
             else:
