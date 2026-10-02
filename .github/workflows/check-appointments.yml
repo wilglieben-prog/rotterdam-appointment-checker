@@ -2,7 +2,7 @@ name: Check Rotterdam Appointments
 
 on:
   schedule:
-    # Run every 5 minutes
+    # Run every 5 minutes - wil
     - cron: '*/5 * * * *'
   workflow_dispatch:  # Allow manual trigger from GitHub Actions UI
 
